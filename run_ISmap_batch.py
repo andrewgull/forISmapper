@@ -8,7 +8,7 @@ import subprocess
 # important variables
 #samples_filepaths = "/data5/bio/M.tuberculosis/Out/IS6110_new/addit_samples/samples_lin1.6_3best.filepaths"
 help_message = "ISmap_batch reads paths to reads from file and runs ismap.py on each pair of reads\n" \
-                "Usage: ISmap_batch.py patths_file ISsequence.fasta ref_genome.gbk"
+                "Usage: ISmap_batch.py paths_file ISsequence.fasta ref_genome.gbk"
 try:
     samples_filepaths = sys.argv[1]
     if samples_filepaths == "-h":
