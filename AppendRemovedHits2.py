@@ -16,6 +16,7 @@ tables.sort()
 
 tablehits = dict(zip(tables, removedHits))
 row_to_add = ["", "", "[-]", "0", "0","[-]", "0", "0", "no"]
+tables_w_no_RemovedHits = list()
 
             
 def check_gap(x):
@@ -47,9 +48,13 @@ for table in tables:
         table_tsv = [row for row in reader]
     
     # read hits
-    with open(tablehits[table], "r") as tab:
-        reader = csv.reader(tab, delimiter='\t')
-        hits_tsv = [row for row in reader]
+    try:
+        with open(tablehits[table], "r") as tab:
+            reader = csv.reader(tab, delimiter='\t')
+            hits_tsv = [row for row in reader]
+    except KeyError:
+        print(table, "no removedHits found")
+        tables_w_no_RemovedHits.append(table)
     
     # take hit's coords, order them and pick two from the middle
     for row in hits_tsv:
@@ -66,11 +71,14 @@ for table in tables:
             coords_to_table = ["regionX", ori] + [coords[1], str(int(coords[1])+100)] + [str(gap)] + [index] + row_to_add
             table_tsv.append(coords_to_table)
     
-    name = table[:-4]+"2"+".txt"
+    name = table[:-4]+"2.txt"
     with open(name, "w") as out:
         writer = csv.writer(out, table_tsv, delimiter='\t')
         for row in table_tsv:
             writer.writerow(row)
+print('copying tables without removedHits...')
+for T in tables_w_no_RemovedHits:
+    os.system('cp %s %s' %(T, T[:-4]+"2.txt"))
             
 
             
