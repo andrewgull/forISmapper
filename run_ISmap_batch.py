@@ -4,31 +4,23 @@ read paths to reads from file and runs ismap.py on each pair of reads
 """
 import sys
 import subprocess
+import datetime
 
-# important variables
-#samples_filepaths = "/data5/bio/M.tuberculosis/Out/IS6110_new/addit_samples/samples_lin1.6_3best.filepaths"
-help_message = "ISmap_batch reads paths to reads from file and runs ismap.py on each pair of reads\n" \
-                "Usage: ISmap_batch.py paths_file ISsequence.fasta ref_genome.gbk"
-try:
-    samples_filepaths = sys.argv[1]
-    if samples_filepaths == "-h":
-    	print(help_message)
-    	sys.exit()
-except IndexError:
-    samples_filepaths = input("enter samples' filepaths file > ")
-#IS_sequence = "/data5/bio/M.tuberculosis/Out/IS6110_new/IS6110-4.fasta"
-try:
-    IS_sequence = sys.argv[2]
-except IndexError:
-    IS_sequence = input("IS sequence (fasta) > ")
-#ref = "/data5/bio/M.tuberculosis/Out/IS6110_new/H37Rv.gbk"
-try:
-    ref = sys.argv[3]
-except IndexError:
-    ref = input("ref genome (*.gbk) > ")
+help_message = "ISmap_batch reads paths to fastq reads from file and runs ismap.py (v0.1.5.1) on each pair of reads\n" \
+                "Arguments:\n1. - samples' filepaths file (one path per line)\n2. - IS-sequence (fasta)\n3. - reference genome (gbk)\n4. - threads for BWA"
 
-ismap_exe = "/home/gulyaev/bin/IS_mapper/scripts/ismap.py"
-path_arg = "/home/gulyaev/bin/IS_mapper/scripts/"
+if len(sys.argv) < 3:
+    print(help_message)
+    sys.exit()
+
+
+samples_filepaths = sys.argv[1]
+IS_sequence = sys.argv[2]
+ref = sys.argv[3]
+threads = sys.argv[4]
+
+ismap_exe = "/home/gulyaev/bin/IS_mapper-0.1.5.1/scripts/ismap.py"
+path_arg = "/home/gulyaev/bin/IS_mapper-0.1.5.1/scripts/"
 
 #samples_filepaths = "files.list"
 #IS_sequence = "IS6110-4.fasta"
@@ -38,8 +30,13 @@ path_arg = "/home/gulyaev/bin/IS_mapper/scripts/"
 paths = [line.rstrip() for line in open(samples_filepaths)]
 paths.sort()
 
+now = datetime.datetime.now()
+time_now = (str(now.year), str(now.month), str(now.day), str(now.hour), str(now.minute))
+
+
 # start ismap here for each pair of reads
-stderr = open("log.txt", 'w')
+stderr = open("log_ismap_batch_%s.txt" % "-".join(time_now), 'w')
+
 n = 0
 for i in range(0, len(paths), 2):
     # --bam turns on keeping the final sorted and indexed BAM files of flanking reads for comparison against the reference genome
