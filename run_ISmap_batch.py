@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 read paths to reads from file and runs ismap.py on each pair of reads
 """
