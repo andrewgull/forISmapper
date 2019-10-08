@@ -25,7 +25,8 @@ def check_gap(x):
     else:
         g = "F"   
     return(g)
-    
+
+
 def check_index(row, prefix="Novel"):
     if "intersect" in row[-1]:
         out = prefix + "I"
@@ -34,11 +35,13 @@ def check_index(row, prefix="Novel"):
     elif "inside" in row[-1]:
         out = prefix + "O"
     return(out)
-    
-def cut_gap(gap, threshold = 2000):
+
+
+def cut_gap(gap, threshold=2000):
     if gap > threshold:
         gap = threshold
     return(gap)
+
 
 # read each table and removed hits as csv
 for table in tables:
@@ -79,8 +82,3 @@ for table in tables:
 print('copying tables without removedHits...')
 for T in tables_w_no_RemovedHits:
     os.system('cp %s %s' %(T, T[:-4]+"2.txt"))
-            
-
-            
-            
-            
